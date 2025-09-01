@@ -24,26 +24,35 @@
 // :::::::::::::::::: methode express ::::::::::::::::::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-import { createServer } from 'node:http'
 import 'dotenv/config'
-
 import express from 'express'
-
 
 const app = express();
 
-app.get('/', (req, res) => {
+const m1 = (req, res, next) => {
+    console.log("middleware : m1");
+    next();
+};
+
+
+const m2 = (req, res, next) => {
+    console.log("middleware : m2");
+    next();
+};
+const m3 = (req, res, next) => {
+    console.log("middleware : m3");
+};
+
+app.get('/', (req, res, next) => {
+    console.log("GET : /");
     res.end("GET : /");
-});
-app.post('/', (req, res) => {
-    res.end("POST : /");
-});
-app.get('/personne', (req, res) => {
-    res.end("GET : /personne");
-});
-app.get('/formation', (req, res) => {
-    res.end("GET : /formation");
-});
+    next();
+})
+// }, m1, m2);
+
+// app.use(m1);
+// app.use(m2);
+app.use([m1, m3, m2]);
 
 const PORT = process.env.PORT || 5000;
 
